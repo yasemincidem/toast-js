@@ -1,0 +1,14 @@
+{
+  "name": "toast-js",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "prettier": "^2.2.1",
+    "eslint": "^7.21.0",
+    "jest": "^26.6.3"
+  }
+}
