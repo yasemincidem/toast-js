@@ -1,6 +1,9 @@
 const tick = () => new Promise((resolve) => setTimeout(resolve, 0))
 const wait = (time) =>
     new Promise((resolve) => setTimeout(resolve, time * 1000))
+const getTransition = () => `${'all'} ${0.3}s ${'ease'}`
+const enterClicked = (event) => event.keyCode === 13
+const escapeClicked = (event) => event.keyCode === 27
 const generateRandomId = () => {
     // RFC4122 version 4 compliant UUID
     const id = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
@@ -8,7 +11,7 @@ const generateRandomId = () => {
         const v = c === 'x' ? r : (r & 0x3) | 0x8
         return v.toString(16)
     })
-    return `notie-${id}`
+    return `toast-${id}`
 }
 const removeFromDocument = (id, position) => {
     const element = document.getElementById(id)
@@ -23,7 +26,7 @@ const removeFromDocument = (id, position) => {
     })
 }
 const hideAlerts = (callback) => {
-    const alertsShowing = document.getElementsByClassName('toast-alert')
+    const alertsShowing = document.getElementsByClassName('toast-container')
     if (alertsShowing.length) {
         for (let i = 0; i < alertsShowing.length; i++) {
             const alert = alertsShowing[i]
@@ -32,18 +35,9 @@ const hideAlerts = (callback) => {
         if (callback) wait(0.3).then(() => callback())
     }
 }
-const getTransition = () => `${'all'} ${0.3}s ${'ease'}`
-const enterClicked = (event) => event.keyCode === 13
-const escapeClicked = (event) => event.keyCode === 27
 const addToDocument = (element, position) => {
     element.classList.add('toast-container')
-    element.style[position] = '-10000px'
-    console.log('element', element)
     document.body.appendChild(element)
-    element.style[position] = `-${element.offsetHeight}px`
-
-    if (element.listener) window.addEventListener('keydown', element.listener)
-
     tick().then(() => {
         element.style.transition = getTransition()
         element.style[position] = 0
@@ -56,24 +50,13 @@ const testAlert = ({
     stay = false,
     position = 'top',
 }) => {
-    blur()
     hideAlerts()
     const element = document.createElement('div')
-    const id = generateRandomId()
-    element.id = id
-    element.position = position
-    element.classList.add('toast-textbox')
-    element.classList.add('toast-background-info')
-    element.classList.add('toast-alert')
-    element.innerHTML = `<div class="${'toast-textboxInner'}">${text}</div>`
-    element.onclick = () => removeFromDocument(id, position)
-
-    element.listener = (event) => {
+    window.addEventListener('keydown', (event) => {
         if (enterClicked(event) || escapeClicked(event)) hideAlerts()
-    }
-
+    })
+    const id = generateRandomId()
+    element.onclick = () => removeFromDocument(id, position)
+    element.id = id
     addToDocument(element, position)
-
-    if (time && time < 1) time = 1
-    // if (!stay && time) wait(time).then(() => removeFromDocument(id, position))
 }
