@@ -44,11 +44,11 @@ const addToDocument = (element, position) => {
     })
 }
 const testAlert = ({
-    type = 4,
+    type = '#4d82d6',
     text,
     time = 3,
     stay = false,
-    position = 'top',
+    position = 'bottom',
 }) => {
     hideAlerts()
     const element = document.createElement('div')
@@ -58,5 +58,7 @@ const testAlert = ({
     const id = generateRandomId()
     element.onclick = () => removeFromDocument(id, position)
     element.id = id
+    element.textContent = text
+    element.style.backgroundColor = type
     addToDocument(element, position)
 }
