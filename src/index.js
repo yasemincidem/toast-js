@@ -1,5 +1,13 @@
-import { POSITIONS } from './options';
-import { BACKGROUND_COLORS } from './options';
+const BACKGROUND_COLORS = {
+    SUCCESS: '#57BF57',
+    ERROR: '#E1715B',
+    INFO: '#4D82D6',
+    WARNING: '#D6A14D',
+}
+const POSITIONS = {
+    TOP: 'top',
+    BOTTOM: 'bottom',
+}
 const tick = () => new Promise((resolve) => setTimeout(resolve, 0))
 const wait = (time) =>
     new Promise((resolve) => setTimeout(resolve, time * 1000))
@@ -22,7 +30,7 @@ const removeFromDocument = (id, position) => {
         if (element.parentNode) element.parentNode.removeChild(element)
     })
 }
-const hideAlerts = (callback) => {
+const clearAll = (callback) => {
     const alertsShowing = document.getElementsByClassName('toast-container')
     if (alertsShowing.length) {
         for (let i = 0; i < alertsShowing.length; i++) {
@@ -35,9 +43,13 @@ const hideAlerts = (callback) => {
 const addToDocument = (element, position) => {
     element.classList.add('toast-container')
     document.body.appendChild(element)
+    const allToasts = document.getElementsByClassName('toast-container')
     tick().then(() => {
         element.style.transition = getTransition()
-        element.style[position] = 0
+        element.style[position] =
+            allToasts.length === 1
+                ? '10px'
+                : `${(allToasts.length - 1) * 50 + 10}px`
     })
 }
 const toast = ({
@@ -47,14 +59,34 @@ const toast = ({
     stay = false,
     position = POSITIONS.TOP,
 }) => {
-    hideAlerts()
     const element = document.createElement('div')
     const id = generateRandomId()
     element.onclick = () => removeFromDocument(id, position)
     element.id = id
+    element.position = position
     element.textContent = text
     element.style.backgroundColor = type
     addToDocument(element, position)
-    // if (time && time < 1) time = 1
-    // if (!stay && time) wait(time).then(() => removeFromDocument(id, position))
+}
+const error = ({ text, time = 3, stay = false, position = POSITIONS.TOP }) => {
+    toast({ type: BACKGROUND_COLORS.ERROR, text, time, stay, position })
+}
+const success = ({
+    text,
+    time = 3,
+    stay = false,
+    position = POSITIONS.TOP,
+}) => {
+    toast({ type: BACKGROUND_COLORS.SUCCESS, text, time, stay, position })
+}
+const warning = ({
+    text,
+    time = 3,
+    stay = false,
+    position = POSITIONS.TOP,
+}) => {
+    toast({ type: BACKGROUND_COLORS.WARNING, text, time, stay, position })
+}
+const info = ({ text, time = 3, stay = false, position = POSITIONS.TOP }) => {
+    toast({ type: BACKGROUND_COLORS.INFO, text, time, stay, position })
 }
