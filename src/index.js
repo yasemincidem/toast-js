@@ -5,8 +5,12 @@ const BACKGROUND_COLORS = {
     WARNING: '#D6A14D',
 }
 const POSITIONS = {
-    TOP: 'top',
-    BOTTOM: 'bottom',
+    TOP_RIGHT: 'toast-top-right',
+    BOTTOM_RIGHT: 'toast-bottom-right',
+    BOTTOM_LEFT: 'toast-bottom-left',
+    TOP_LEFT: 'toast-top-left',
+    TOP_CENTER: 'toast-top-center',
+    BOTTOM_CENTER: 'toast-bottom-center',
 }
 const tick = () => new Promise((resolve) => setTimeout(resolve, 0))
 const wait = (time) =>
@@ -42,22 +46,31 @@ const clearAll = (callback) => {
 }
 const addToDocument = (element, position) => {
     element.classList.add('toast-container')
+    element.classList.add(position)
     document.body.appendChild(element)
     const allToasts = document.getElementsByClassName('toast-container')
     tick().then(() => {
         element.style.transition = getTransition()
-        element.style[position] =
-            allToasts.length === 1
-                ? '10px'
-                : `${(allToasts.length - 1) * 50 + 10}px`
+        if (position.indexOf('top') > -1) {
+            element.style.top =
+                allToasts.length === 1
+                    ? '10px'
+                    : `${(allToasts.length - 1) * 50 + 10}px`
+        }
+        if (position.indexOf('bottom') > -1) {
+            element.style.bottom =
+                allToasts.length === 1
+                    ? '10px'
+                    : `${(allToasts.length - 1) * 50 + 10}px`
+        }
     })
 }
-const toast = ({
+const showToast = ({
     type = BACKGROUND_COLORS.SUCCESS,
     text,
     time = 3,
     stay = false,
-    position = POSITIONS.TOP,
+    position = POSITIONS.TOP_RIGHT,
 }) => {
     const element = document.createElement('div')
     const id = generateRandomId()
@@ -68,25 +81,35 @@ const toast = ({
     element.style.backgroundColor = type
     addToDocument(element, position)
 }
-const error = ({ text, time = 3, stay = false, position = POSITIONS.TOP }) => {
-    toast({ type: BACKGROUND_COLORS.ERROR, text, time, stay, position })
+const error = ({
+    text,
+    time = 3,
+    stay = false,
+    position = POSITIONS.TOP_RIGHT,
+}) => {
+    showToast({ type: BACKGROUND_COLORS.ERROR, text, time, stay, position })
 }
 const success = ({
     text,
     time = 3,
     stay = false,
-    position = POSITIONS.TOP,
+    position = POSITIONS.TOP_RIGHT,
 }) => {
-    toast({ type: BACKGROUND_COLORS.SUCCESS, text, time, stay, position })
+    showToast({ type: BACKGROUND_COLORS.SUCCESS, text, time, stay, position })
 }
 const warning = ({
     text,
     time = 3,
     stay = false,
-    position = POSITIONS.TOP,
+    position = POSITIONS.TOP_RIGHT,
 }) => {
-    toast({ type: BACKGROUND_COLORS.WARNING, text, time, stay, position })
+    showToast({ type: BACKGROUND_COLORS.WARNING, text, time, stay, position })
 }
-const info = ({ text, time = 3, stay = false, position = POSITIONS.TOP }) => {
-    toast({ type: BACKGROUND_COLORS.INFO, text, time, stay, position })
+const info = ({
+    text,
+    time = 3,
+    stay = false,
+    position = POSITIONS.TOP_RIGHT,
+}) => {
+    showToast({ type: BACKGROUND_COLORS.INFO, text, time, stay, position })
 }
