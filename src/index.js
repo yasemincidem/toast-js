@@ -45,25 +45,27 @@ const clearAll = (callback) => {
     }
 }
 const addToDocument = (element, position) => {
-    element.classList.add('toast-container')
-    element.classList.add(position)
-    document.body.appendChild(element)
-    const allToasts = document.getElementsByClassName('toast-container')
+    const container = getContainer(position)
+    container.appendChild(element)
     tick().then(() => {
         element.style.transition = getTransition()
-        if (position.indexOf('top') > -1) {
-            element.style.top =
-                allToasts.length === 1
-                    ? '10px'
-                    : `${(allToasts.length - 1) * 50 + 10}px`
-        }
-        if (position.indexOf('bottom') > -1) {
-            element.style.bottom =
-                allToasts.length === 1
-                    ? '10px'
-                    : `${(allToasts.length - 1) * 50 + 10}px`
-        }
     })
+}
+const getContainer = (position) => {
+    const container = Array.from(
+        document.getElementsByClassName('toast-wrapper')
+    )
+    let result
+    if (container.length) {
+        result = container[0]
+    } else {
+        const element = document.createElement('div')
+        element.classList.add('toast-wrapper')
+        element.classList.add(position)
+        document.body.appendChild(element)
+        result = element
+    }
+    return result
 }
 const showToast = ({
     type = BACKGROUND_COLORS.SUCCESS,
@@ -79,6 +81,7 @@ const showToast = ({
     element.position = position
     element.textContent = text
     element.style.backgroundColor = type
+    element.classList.add('toast-container')
     addToDocument(element, position)
 }
 const error = ({
