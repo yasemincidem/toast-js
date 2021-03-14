@@ -116,3 +116,11 @@ const info = ({
 }) => {
     showToast({ type: BACKGROUND_COLORS.INFO, text, time, stay, position })
 }
+module.exports = {
+    clearAll,
+    error: error,
+    getContainer: getContainer,
+    info: info,
+    success: success,
+    warning: warning,
+}
