@@ -1,9 +1,10 @@
+import { POSITIONS } from './options';
+import { BACKGROUND_COLORS } from './options';
 const tick = () => new Promise((resolve) => setTimeout(resolve, 0))
 const wait = (time) =>
     new Promise((resolve) => setTimeout(resolve, time * 1000))
 const getTransition = () => `${'all'} ${0.3}s ${'ease'}`
-const enterClicked = (event) => event.keyCode === 13
-const escapeClicked = (event) => event.keyCode === 27
+
 const generateRandomId = () => {
     // RFC4122 version 4 compliant UUID
     const id = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
@@ -17,10 +18,6 @@ const removeFromDocument = (id, position) => {
     const element = document.getElementById(id)
     if (!element) return
     element.style[position] = `-${element.offsetHeight}px`
-
-    if (element.listener)
-        window.removeEventListener('keydown', element.listener)
-
     wait(0.3).then(() => {
         if (element.parentNode) element.parentNode.removeChild(element)
     })
@@ -43,22 +40,21 @@ const addToDocument = (element, position) => {
         element.style[position] = 0
     })
 }
-const testAlert = ({
-    type = '#4d82d6',
+const toast = ({
+    type = BACKGROUND_COLORS.SUCCESS,
     text,
     time = 3,
     stay = false,
-    position = 'bottom',
+    position = POSITIONS.TOP,
 }) => {
     hideAlerts()
     const element = document.createElement('div')
-    window.addEventListener('keydown', (event) => {
-        if (enterClicked(event) || escapeClicked(event)) hideAlerts()
-    })
     const id = generateRandomId()
     element.onclick = () => removeFromDocument(id, position)
     element.id = id
     element.textContent = text
     element.style.backgroundColor = type
     addToDocument(element, position)
+    // if (time && time < 1) time = 1
+    // if (!stay && time) wait(time).then(() => removeFromDocument(id, position))
 }
