@@ -30,19 +30,7 @@ const removeFromDocument = (id, position) => {
     const element = document.getElementById(id)
     if (!element) return
     element.style[position] = `-${element.offsetHeight}px`
-    wait(0.3).then(() => {
-        if (element.parentNode) element.parentNode.removeChild(element)
-    })
-}
-const clearAll = (callback) => {
-    const alertsShowing = document.getElementsByClassName('toast-container')
-    if (alertsShowing.length) {
-        for (let i = 0; i < alertsShowing.length; i++) {
-            const alert = alertsShowing[i]
-            removeFromDocument(alert.id, alert.position)
-        }
-        if (callback) wait(0.3).then(() => callback())
-    }
+    if (element.parentNode) element.parentNode.removeChild(element)
 }
 const addToDocument = (element, position) => {
     const container = getContainer(position)
@@ -83,6 +71,10 @@ const showToast = ({
     element.style.backgroundColor = type
     element.classList.add('toast-container')
     addToDocument(element, position)
+}
+const clearAll = () => {
+    const container = getContainer()
+    document.body.removeChild(container)
 }
 const error = ({
     text,
