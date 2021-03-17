@@ -58,7 +58,48 @@
                         padding-right: 50px;
                     "
                 >
-                    <button onclick="test()">Success</button>
+                    <button
+                        onclick=" success({
+                    type: 'red',
+                    stay: true,
+                                        position: 'toast-top-right',
+
+                    text: 'You cancelled: ',
+                })"
+                    >
+                        Success
+                    </button>
+                    <button
+                        onclick=" info({
+                    type: 'red',
+                    stay: true,
+                                        position: 'toast-top-left',
+
+                    text: 'You cancelled: ',
+                })"
+                    >
+                        Info
+                    </button>
+                    <button
+                        onclick=" warning({
+                    type: 'red',
+                    stay: true,
+                                        position: 'toast-bottom-right',
+                    text: 'You cancelled: ',
+                })"
+                    >
+                        Warning
+                    </button>
+                    <button
+                        onclick=" error({
+                    type: 'red',
+                    position: 'toast-bottom-left',
+                    time: 1,
+                    text: 'You cancelled: ',
+                })"
+                    >
+                        Error
+                    </button>
                     <button onclick="test2()">Clear all</button>
                 </div>
             </div>

@@ -9,13 +9,15 @@ const POSITIONS = {
     BOTTOM_RIGHT: 'toast-bottom-right',
     BOTTOM_LEFT: 'toast-bottom-left',
     TOP_LEFT: 'toast-top-left',
-    TOP_CENTER: 'toast-top-center',
-    BOTTOM_CENTER: 'toast-bottom-center',
 }
-const tick = () => new Promise((resolve) => setTimeout(resolve, 0))
+const getTransition = (type = 'fadeInRight', time = 0.6) =>
+    `${type} ${time}s forwards`
+
+const tick = (time) =>
+    new Promise((resolve) => setTimeout(resolve, time * 1000))
+
 const wait = (time) =>
     new Promise((resolve) => setTimeout(resolve, time * 1000))
-const getTransition = () => `${'all'} ${0.3}s ${'ease'}`
 
 const generateRandomId = () => {
     // RFC4122 version 4 compliant UUID
@@ -26,18 +28,20 @@ const generateRandomId = () => {
     })
     return `toast-${id}`
 }
-const removeFromDocument = (id, position) => {
+const removeFromDocument = async (id, position) => {
     const element = document.getElementById(id)
     if (!element) return
     element.style[position] = `-${element.offsetHeight}px`
+    element.style.animation = getTransition('fadeOut')
+    await wait(0.3)
     if (element.parentNode) element.parentNode.removeChild(element)
 }
 const addToDocument = (element, position) => {
     const container = getContainer(position)
     container.appendChild(element)
-    tick().then(() => {
-        element.style.transition = getTransition()
-    })
+    const animation =
+        position.indexOf('left') > -1 ? 'fadeInLeft' : 'fadeInRight'
+    element.style.animation = getTransition(animation)
 }
 const getContainer = (position) => {
     const container = Array.from(
@@ -55,22 +59,32 @@ const getContainer = (position) => {
     }
     return result
 }
-const showToast = ({
+const showToast = async ({
     type = BACKGROUND_COLORS.SUCCESS,
     text,
     time = 3,
     stay = false,
-    position = POSITIONS.TOP_RIGHT,
+    position,
 }) => {
+    let newPosition
+    if (Object.values(POSITIONS).indexOf(position) > -1) {
+        newPosition = position
+    } else {
+        newPosition = POSITIONS.TOP_RIGHT
+    }
     const element = document.createElement('div')
     const id = generateRandomId()
-    element.onclick = () => removeFromDocument(id, position)
+    element.onclick = async () => removeFromDocument(id, newPosition)
     element.id = id
-    element.position = position
+    element.position = newPosition
     element.textContent = text
     element.style.backgroundColor = type
     element.classList.add('toast-container')
-    addToDocument(element, position)
+    addToDocument(element, newPosition)
+    await tick(time)
+    if (!stay) {
+        await removeFromDocument(id, newPosition)
+    }
 }
 const clearAll = () => {
     const container = getContainer()
