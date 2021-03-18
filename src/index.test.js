@@ -11,14 +11,16 @@ describe('toast', () => {
             toast[type]({ text: 'hello success message 1' })
             toast[type]({ text: 'hello success message 1' })
             toast[type]({ text: 'hello success message 1' })
-            expect(toast.getContainer().children.length).toBe(3)
+            expect(toast.getContainer('toast-top-right').children.length).toBe(
+                3
+            )
         }
     )
     it('show 2 warning toasts and clear all', () => {
         toast.warning({ text: 'hello warning message 1' })
         toast.warning({ text: 'hello warning message 2' })
         toast.clearAll()
-        expect(toast.getContainer().children.length).toBe(0)
+        expect(toast.getContainer('toast-top-right').children.length).toBe(0)
     })
     it('show 3 info toasts and clear all and then show 1 more', () => {
         toast.info({ text: 'hello info message 1' })
@@ -26,7 +28,7 @@ describe('toast', () => {
         toast.info({ text: 'hello info message 2' })
         toast.clearAll()
         toast.info({ text: 'hello info message 2' })
-        expect(toast.getContainer().children.length).toBe(1)
+        expect(toast.getContainer('toast-top-right').children.length).toBe(1)
     })
     it.each`
         type         | position                | expected
@@ -38,7 +40,7 @@ describe('toast', () => {
         `$type - pass message with default position`,
         ({ type, position, expected }) => {
             toast[type]({ text: 'hello', position })
-            const container = toast.getContainer()
+            const container = toast.getContainer(position)
             const element = container.children[0]
             expect({
                 backgroundColor: element.style.backgroundColor,
@@ -54,7 +56,7 @@ describe('toast', () => {
             text: 'hello warning message 1',
             position: 'toast-bottom-right',
         })
-        const element = toast.getContainer().children[0]
+        const element = toast.getContainer('toast-bottom-right').children[0]
         element.onclick = mockCallback
         element.onclick()
         expect(mockCallback).toHaveBeenCalled()
@@ -64,8 +66,8 @@ describe('toast', () => {
             text: 'hello warning message 1',
             position: 'toast-bottom-right',
         })
-        const element = toast.getContainer().children[0]
+        const element = toast.getContainer('toast-bottom-right').children[0]
         await element.onclick()
-        expect(toast.getContainer().children.length).toBe(0)
+        expect(toast.getContainer('toast-bottom-right').children.length).toBe(0)
     })
 })

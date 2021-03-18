@@ -38,24 +38,25 @@ const removeFromDocument = async (id, position) => {
 }
 const addToDocument = (element, position) => {
     let container = getContainer(position)
-    if (!container) {
-        container = document.createElement('div')
-        container.classList.add(`toast-wrapper-${position}`)
-        container.classList.add(position)
-        document.body.appendChild(container)
-    }
     const animation =
         position.indexOf('left') > -1 ? 'fadeInLeft' : 'fadeInRight'
     element.style.animation = getTransition(animation)
     container.appendChild(element)
 }
 const getContainer = (position) => {
+    position = position || 'toast-top-right'
     const container = Array.from(
         document.getElementsByClassName(`toast-wrapper-${position}`)
     )
-    let result = undefined
+    let result
     if (container.length) {
         result = container[0]
+    } else {
+        const newContainer = document.createElement('div')
+        newContainer.classList.add(`toast-wrapper-${position}`)
+        newContainer.classList.add(position)
+        document.body.appendChild(newContainer)
+        result = newContainer
     }
     return result
 }
