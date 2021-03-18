@@ -1,6 +1,7 @@
 const toast = require('./index')
 const wait = (time) =>
     new Promise((resolve) => setTimeout(resolve, time * 1000))
+
 describe('toast', () => {
     beforeEach(() => {
         toast.clearAll()
@@ -68,6 +69,18 @@ describe('toast', () => {
         })
         const element = toast.getContainer('toast-bottom-right').children[0]
         await element.onclick()
+        expect(toast.getContainer('toast-bottom-right').children.length).toBe(0)
+    })
+
+    it('clear toast automatically after timer is over', async () => {
+        toast.success({
+            text: 'Hello success message',
+            time: 2,
+            stay: false,
+            position: 'toast-bottom-right',
+        })
+        // we have to wait one more sec for this test to pass
+        await wait(3)
         expect(toast.getContainer('toast-bottom-right').children.length).toBe(0)
     })
 })

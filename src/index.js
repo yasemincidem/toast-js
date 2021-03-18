@@ -13,9 +13,6 @@ const POSITIONS = {
 const getTransition = (type = 'fadeInRight', time = 0.6) =>
     `${type} ${time}s forwards`
 
-const tick = (time) =>
-    new Promise((resolve) => setTimeout(resolve, time * 1000))
-
 const wait = (time) =>
     new Promise((resolve) => setTimeout(resolve, time * 1000))
 
@@ -82,7 +79,7 @@ const showToast = async ({
     element.style.backgroundColor = type
     element.classList.add('toast-container')
     addToDocument(element, newPosition)
-    await tick(time)
+    await wait(time)
     if (!stay) {
         await removeFromDocument(id, newPosition)
     }
