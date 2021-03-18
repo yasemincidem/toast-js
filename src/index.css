@@ -1,4 +1,4 @@
-.toast-wrapper {
+div[class^="toast-wrapper"] {
     position: absolute;
     height: auto;
 }

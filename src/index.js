@@ -37,25 +37,25 @@ const removeFromDocument = async (id, position) => {
     if (element.parentNode) element.parentNode.removeChild(element)
 }
 const addToDocument = (element, position) => {
-    const container = getContainer(position)
-    container.appendChild(element)
+    let container = getContainer(position)
+    if (!container) {
+        container = document.createElement('div')
+        container.classList.add(`toast-wrapper-${position}`)
+        container.classList.add(position)
+        document.body.appendChild(container)
+    }
     const animation =
         position.indexOf('left') > -1 ? 'fadeInLeft' : 'fadeInRight'
     element.style.animation = getTransition(animation)
+    container.appendChild(element)
 }
 const getContainer = (position) => {
     const container = Array.from(
-        document.getElementsByClassName('toast-wrapper')
+        document.getElementsByClassName(`toast-wrapper-${position}`)
     )
-    let result
+    let result = undefined
     if (container.length) {
         result = container[0]
-    } else {
-        const element = document.createElement('div')
-        element.classList.add('toast-wrapper')
-        element.classList.add(position)
-        document.body.appendChild(element)
-        result = element
     }
     return result
 }
@@ -87,8 +87,9 @@ const showToast = async ({
     }
 }
 const clearAll = () => {
-    const container = getContainer()
-    document.body.removeChild(container)
+    document
+        .querySelectorAll('[class^=toast-wrapper]')
+        .forEach((i) => document.body.removeChild(i))
 }
 const error = ({
     text,
