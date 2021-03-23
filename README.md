@@ -34,34 +34,37 @@ import { success, error, warning, info } from 'toasti'
 #### Available methods:
 ```js
 toasti.success({
-type: Number|String, // optional, default = 4, enum: [1, 2, 3, 4, 5, 'success', 'warning', 'error', 'info', 'neutral']
 text: String,
 stay: Boolean, // optional, default = false
 time: Number, // optional, default = 3, minimum = 1,
 position: String // optional, default = 'toast-top-right', enum: ['toast-top-right', 'toast-bottom-right', 'toast-bottom-left', 'toast-top-left']
 })
 toasti.warning({
-type: Number|String, // optional, default = 4, enum: [1, 2, 3, 4, 5, 'success', 'warning', 'error', 'info', 'neutral']
 text: String,
 stay: Boolean, // optional, default = false
 time: Number, // optional, default = 3, minimum = 1,
 position: String // optional, default = 'toast-top-right', enum: ['toast-top-right', 'toast-bottom-right', 'toast-bottom-left', 'toast-top-left']
 })
 toasti.info({
-type: Number|String, // optional, default = 4, enum: [1, 2, 3, 4, 5, 'success', 'warning', 'error', 'info', 'neutral']
 text: String,
 stay: Boolean, // optional, default = false
 time: Number, // optional, default = 3, minimum = 1,
 position: String // optional, default = 'toast-top-right', enum: ['toast-top-right', 'toast-bottom-right', 'toast-bottom-left', 'toast-top-left']
 })
 toasti.error({
-type: Number|String, // optional, default = 4, enum: [1, 2, 3, 4, 5, 'success', 'warning', 'error', 'info', 'neutral']
 text: String,
 stay: Boolean, // optional, default = false
 time: Number, // optional, default = 3, minimum = 1,
 position: String // optional, default = 'toast-top-right', enum: ['toast-top-right', 'toast-bottom-right', 'toast-bottom-left', 'toast-top-left']
 })
 toasti.clearAll()
+toasti.show({
+type: String, // optional, default = 'success', enum: ['success', 'warning', 'error', 'info']
+text: String,
+stay: Boolean, // optional, default = false
+time: Number, // optional, default = 3, minimum = 1,
+position: String // optional, default = 'toast-top-right', enum: ['toast-top-right', 'toast-bottom-right', 'toast-bottom-left', 'toast-top-left']
+})
 ```
 ## License
 MIT
