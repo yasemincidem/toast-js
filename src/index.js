@@ -128,4 +128,5 @@ module.exports = {
     info: info,
     success: success,
     warning: warning,
+    show: showToast,
 }
